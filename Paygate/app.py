@@ -17,7 +17,7 @@ class Todo(db.Model):
         return 'payment successful'
     
  
-@app.route('/login')
+@app.route('/')
 def index():
      return render_template("login.html")
 @app.route('/validate', methods = ["POST"])  
