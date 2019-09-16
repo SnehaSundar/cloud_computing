@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app=Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] =  'mysql+pymysql://admin:cloud123@database-1.cbmjucn2aqjr.ap-south-1.rds.amazonaws.com/database-1'
+app.config['SQLALCHEMY_DATABASE_URI'] =  'mysql+pymysql://admin:cloud123@database-1.cbmjucn2aqjr.ap-south-1.rds.amazonaws.com:3306/Database1'
 #'sqlite:///transactions.db'
 db = SQLAlchemy(app)
 
@@ -17,7 +17,7 @@ class Todo(db.Model):
         return 'payment successful'
     
  
-@app.route('/login')
+@app.route('/')
 def index():
      return render_template("login.html")
 @app.route('/validate', methods = ["POST"])  
@@ -34,8 +34,6 @@ def add_transaction():
 
 @app.route('/to_database', methods = ["POST"])  
 def to_database():  
-    db.drop_all()
-    db.create_all()
     if request.method == "POST":
         task_recepient = request.form["recepient"]
         add_recepient = Todo(recepient = task_recepient)
