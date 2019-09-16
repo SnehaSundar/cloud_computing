@@ -55,5 +55,5 @@ def success():
     return render_template('success.html')
     
 if __name__ == "__main__":
-    app.run(host='10.0.1.17', port=80)
+    app.run(host='0.0.0.0', port=80)
 
