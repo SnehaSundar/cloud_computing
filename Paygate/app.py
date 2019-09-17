@@ -3,12 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import create_engine
 from flask import jsonify
-engine = create_engine("mysql+pymysql://admin:cloud123@database-1.cbmjucn2aqjr.ap-south-1.rds.amazonaws.com:3306/Database1")
+engine = create_engine("mysql+pymysql://admin:cloud123@database-1.cuujcmal7p0q.ap-south-1.rds.amazonaws.com:3306/Database1")
 
 
 
 app=Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] =  'mysql+pymysql://admin:cloud123@database-1.cbmjucn2aqjr.ap-south-1.rds.amazonaws.com:3306/Database1'
+app.config['SQLALCHEMY_DATABASE_URI'] =  'mysql+pymysql://admin:cloud123@database-1.cuujcmal7p0q.ap-south-1.rds.amazonaws.com:3306/Database1'
 #'sqlite:///transactions.db'
 db = SQLAlchemy(app)
 
@@ -60,7 +60,12 @@ def success():
      cur.execute("SELECT * FROM todo")
      data = cur.fetchall()
      return jsonify(data)
-    
+
+import logging
+logging.basicConfig(filename='backup.log',level=logging.DEBUG)
+
+import socket
+ip_addr = socket.gethostbyname(socket.gethostname())
 if __name__ == "__main__":
-    app.run(host='10.0.1.17', port=80)
+    app.run(host=ip_addr, port=80)
 
