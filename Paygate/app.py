@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy 
 from datetime import datetime
+from sqlalchemy import create_engine
+from flask import jsonify
+engine = create_engine("mysql+pymysql://admin:cloud123@database-1.cbmjucn2aqjr.ap-south-1.rds.amazonaws.com:3306/Database1")
+
+
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] =  'mysql+pymysql://admin:cloud123@database-1.cbmjucn2aqjr.ap-south-1.rds.amazonaws.com:3306/Database1'
@@ -16,7 +21,10 @@ class Todo(db.Model):
     def __repr__(self):
         return 'payment successful'
     
- 
+def __init__(self,recepient,amount):
+    self.recepient = recepient
+    self.amount = amount
+
 @app.route('/')
 def index():
      return render_template("login.html")
@@ -35,14 +43,9 @@ def add_transaction():
 @app.route('/to_database', methods = ["POST"])  
 def to_database():  
     if request.method == "POST":
-        task_recepient = request.form["recepient"]
-        add_recepient = Todo(recepient = task_recepient)
-        task_amount = request.form["amount"]
-        add_amount = Todo(amount = task_amount)
+        temp = Todo(recepient=request.form['recepient'],amount=request.form['amount'])
         try:
-            db.session.add(add_recepient)
-            db.session.add(add_amount)
-
+            db.session.add(temp)
             db.session.commit()
             return redirect(url_for("success"))
         except:
@@ -50,10 +53,14 @@ def to_database():
     else:
         return "TYPE METHOD ERROR"
 
-@app.route('/success')
+@app.route('/all')
 def success():
-    return render_template('success.html')
+     connection = db.engine.raw_connection()
+     cur = connection.cursor()
+     cur.execute("SELECT * FROM todo")
+     data = cur.fetchall()
+     return jsonify(data)
     
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='10.0.1.17', port=80)
 
